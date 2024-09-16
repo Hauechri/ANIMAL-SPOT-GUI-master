@@ -1,0 +1,1 @@
+./venv/Scripts/activate.bat & python ./GUI/start_GUI_tabs.py & pause
