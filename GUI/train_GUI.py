@@ -193,7 +193,7 @@ train_layout=[
     [t_start_prediction_button],
     #[t_output]
 ]
-train_column = [[sg.Column(train_layout, scrollable=True, size=(700,700))]]
+train_column = [[sg.Column(train_layout, scrollable=True, size=(1000,700))]]
 
 def getTrainGUI():
     return train_column

@@ -98,7 +98,7 @@ pred_layout=[
 
 ]
 
-pred_column = [[sg.Column(pred_layout, scrollable=True, size=(700,700))]]
+pred_column = [[sg.Column(pred_layout, scrollable=True, size=(1000,700))]]
 def getPredGUI():
     return pred_column
 

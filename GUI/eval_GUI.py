@@ -40,7 +40,7 @@ eval_layout=[
     [e_start_prediction_button],
     #[e_output]
 ]
-eval_column = [[sg.Column(eval_layout, scrollable=True, size=(700,700))]]
+eval_column = [[sg.Column(eval_layout, scrollable=True, size=(1000,700))]]
 def getEvalGUI():
     return eval_column
 
