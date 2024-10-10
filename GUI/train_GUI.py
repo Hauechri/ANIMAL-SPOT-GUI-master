@@ -62,7 +62,7 @@ t_filter_broken_audio_checkbox=sg.Checkbox(text="", default=False, key="-t_filte
 t_min_max_norm_label=sg.Text("Use min max normalization:")
 t_min_max_norm_checkbox=sg.Checkbox(text="", default=True, key="-t_min_max_norm-")
 
-t_sequence_len_label=sg.Text("Enter ANIMAL-SPOT window size in milliseconds:")
+t_sequence_len_label=sg.Text("Enter ANIMAL-SPOT window size in ms:")
 t_sequence_len_input=sg.InputText(key="-t_sequence_len-", default_text="20")
 t_sequence_len_reset=sg.Button(button_text="default", key="t_default_sequence_len")
 

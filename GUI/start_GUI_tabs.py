@@ -23,7 +23,7 @@ layout = [[sg.TabGroup([
     [
         sg.Tab('Train', train_column),
         sg.Tab('Prediction', pred_column),
-        sg.Tab('Evaluation', eval_column)
+        sg.Tab('Translation', eval_column)
     ]])],
 ]
 window = sg.Window('ANIMAL-SPOT-GUI', layout, finalize=True)

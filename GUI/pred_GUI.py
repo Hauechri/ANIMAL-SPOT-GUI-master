@@ -14,11 +14,11 @@ p_model_dir_label=sg.Text("Enter model directory:")
 p_model_dir_input=sg.InputText(key="-p_model_dir-")
 p_model_dir_filebrowser=sg.FolderBrowse(initial_folder=working_directory)
 
-p_log_dir_label=sg.Text("Enter model directory:")
+p_log_dir_label=sg.Text("Enter log directory:")
 p_log_dir_input=sg.InputText(key="-p_log_dir-")
 p_log_dir_filebrowser=sg.FolderBrowse(initial_folder=working_directory)
 
-p_output_dir_label=sg.Text("Enter model directory:")
+p_output_dir_label=sg.Text("Enter output directory:")
 p_output_dir_input=sg.InputText(key="-p_output_dir-")
 p_output_dir_filebrowser=sg.FolderBrowse(initial_folder=working_directory)
 
@@ -44,8 +44,8 @@ p_min_max_norm_checkbox=sg.Checkbox(text="", default=True, key="-p_min_max_norm-
 p_latent_extract_label=sg.Text("Use latent extraction:")
 p_latent_extract_checkbox=sg.Checkbox(text="", default=True, key="-p_latent_extract-")
 
-p_sequence_len_label=sg.Text("Enter ANIMAL-SPOT window size:")
-p_sequence_len_input=sg.InputText(key="-p_sequence_len-", default_text="0.30")
+p_sequence_len_label=sg.Text("Enter ANIMAL-SPOT window size in ms:")
+p_sequence_len_input=sg.InputText(key="-p_sequence_len-", default_text="300")
 p_sequence_len_reset=sg.Button(button_text="default", key="p_default_sequence_len")
 
 p_hop_label=sg.Text("Enter ANIMAL-SPOT hop size:")
@@ -105,8 +105,8 @@ def getPredGUI():
 
 def PredhandleInput(event, values, window):
     if event == "p_default_sequence_len":
-        window['-p_sequence_len-'].update("0.30")
-        values['-p_sequence_len-'] = "0.30"
+        window['-p_sequence_len-'].update("300")
+        values['-p_sequence_len-'] = "300"
     if event == "p_default_hop":
         window['-p_hop-'].update("0.10")
         values['-p_hop-'] = "0.10"
@@ -191,7 +191,9 @@ def generatePredConfig(values):
 
     # Number Parameter
     if values["-p_sequence_len-"] != "":
-        file.write("sequence_len=" + str(values["-p_sequence_len-"]) + "\n")
+        msvalue = float(values["-p_sequence_len-"])
+        value = msvalue/1000.0
+        file.write("sequence_len=" + str(value) + "\n")
 
     if values["-p_hop-"] != "":
         file.write("hop=" + str(values["-p_hop-"]) + "\n")
@@ -367,7 +369,9 @@ def startPrediction(values):
 
     # Number Parameter
     if values["-p_sequence_len-"] != "":
-        pred_cmd = pred_cmd + " --sequence_len " + values["-p_sequence_len-"]
+        msvalue = float(values["-p_sequence_len-"])
+        value = msvalue/1000.0
+        pred_cmd = pred_cmd + " --sequence_len " + str(value)
 
     if values["-p_hop-"] != "":
         pred_cmd = pred_cmd + " --hop " + values["-p_hop-"]
