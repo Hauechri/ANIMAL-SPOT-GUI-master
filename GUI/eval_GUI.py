@@ -1,4 +1,5 @@
 import utils.PySimpleGUIQt as sg
+import EVALUATION.start_evaluation as se
 import os
 working_directory=os.getcwd()
 
@@ -109,20 +110,26 @@ def loadEvalConfig(values, window):
                 values['-e_noise_in_anno-'] = False
     file.close()
 
-def startEvaluation(values):
-    """eval_cmd = "python -W ignore::UserWarning"
-    if values["-e_src_dir-"] == "":
-        sg.popup_error("ANIMAL-SPOT source File not set")
-        return
-    elif not os.path.isfile(values["-e_src_dir-"] + "/main.py"):
-        sg.popup_error("Source File error")
-        return
-
+def getEvalConfig(values):
+    config_data = dict()
     if values["-e_prediction_dir-"] == "":
-        sg.popup_error("Model directory not specified")
+        sg.popup_error("Prediction directory not set")
         return
-    eval_cmd = eval_cmd + " --model_dir " + values["-e_prediction_dir-"]+"/"
+    config_data["prediction_dir"] = values["-e_prediction_dir-"]
+    if values["-e_output_dir-"] == "":
+        sg.popup_error("Output directory not set")
+        return
+    config_data["output_dir"] = values["-e_output_dir-"]
+    if values["-e_threshold-"] == "":
+        sg.popup_error("Threshold not set")
+        return
+    config_data["threshold"] = values["-e_threshold-"]
+    if values["-e_noise_in_anno-"] == "true":
+        config_data["noise_in_anno"] = ""
 
-    eval_cmd = eval_cmd + " " + values["-e_src_dir-"] + "/main.py"
-    """
-    pass
+
+def startEvaluation(values):
+    evaluator = se.setup_evaluator()
+    evaluator.init_logger()
+    evaluator.config_data = getEvalConfig(values)
+    evaluator.process()
