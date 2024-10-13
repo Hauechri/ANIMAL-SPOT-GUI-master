@@ -25,9 +25,16 @@ t_cache_dir_label=sg.Text("Enter cache directory:")
 t_cache_dir_input=sg.InputText(key="-t_cache_dir-")
 t_cache_dir_filebrowser=sg.FolderBrowse(initial_folder=working_directory)
 
+t_train_or_retrain_label=sg.Text("Enable retrain:")
+t_train_or_retrain=sg.Checkbox(text="", default=False, key="-t_tore-")
+
 t_model_dir_label=sg.Text("Enter model directory:")
 t_model_dir_input=sg.InputText(key="-t_model_dir-")
-t_model_dir_filebrowser=sg.FolderBrowse(initial_folder=working_directory)
+t_model_dir_folderbrowser=sg.FolderBrowse(initial_folder=working_directory)
+
+t_model_dir_relabel=sg.Text("Enter model file:")
+t_model_dir_reinput=sg.InputText(key="-t_model_redir-")
+t_model_dir_refilebrowser=sg.FileBrowse(initial_folder=working_directory)
 
 t_checkpoint_dir_label=sg.Text("Enter checkpoint directory:")
 t_checkpoint_dir_input=sg.InputText(key="-t_checkpoint_dir-")
@@ -153,7 +160,9 @@ t_start_prediction_button=sg.Button(button_text="Start Training", key="t_start")
 #sg.Print('Re-routing train_GUI to Debug stdout', do_not_reroute_stdout=False)
 
 train_layout=[
-    [t_model_dir_label, t_model_dir_input, t_model_dir_filebrowser],
+    [t_train_or_retrain_label, t_train_or_retrain],
+    [t_model_dir_label, t_model_dir_input, t_model_dir_folderbrowser],
+    [t_model_dir_relabel, t_model_dir_reinput, t_model_dir_refilebrowser],
     [t_src_dir_label,t_src_dir_input,t_src_dir_filebrowser],
     [t_data_dir_label,t_data_dir_input,t_data_dir_filebrowser],
     [t_noise_dir_label,t_noise_dir_input,t_noise_dir_filebrowser],
@@ -275,11 +284,19 @@ def generateTrainConfig(values):
         return
     file.write("src_dir=" + str(values["-t_src_dir-"]) + "/\n")
 
-    if values["-t_model_dir-"] == "":
-        sg.popup_error("Model directory not specified")
-        file.close()
-        return
-    file.write("model_dir=" + str(values["-t_model_dir-"]) + "/\n")
+    if values["-t_tore-"] is True:
+        if values["-t_model_redir-"] == "":
+            sg.popup_error("Retrain enabled but model file not specified")
+            file.close()
+            return
+        file.write("model_dir=" + str(values["-t_model_redir-"]) + "\n")
+    else:
+        if values["-t_model_dir-"] == "":
+            sg.popup_error("Retrain disabled but model save directory not specified")
+            file.close()
+            return
+        file.write("model_dir=" + str(values["-t_model_dir-"]) + "/\n")
+
 
     if values["-t_data_dir-"] == "":
         sg.popup_error("Data directory not specified")
@@ -435,10 +452,21 @@ def loadTrainConfig(values, window):
             window['-t_cache_dir-'].update(val)
             values['-t_cache_dir-'] = val
         if line.__contains__("model_dir="):
-            val = line.split("=")[1]
-            val = val.split("\n")[0]
-            window['-t_model_dir-'].update(val)
-            values['-t_model_dir-'] = val
+            if line.__contains__("/\n"):
+                window['-t_tore-'].update(True)
+                values['-t_tore-'] = True
+                val = line.split("=")[1]
+                val = val.split("\n")[0]
+                window['-t_model_dir-'].update(val)
+                values['-t_model_dir-'] = val
+            else:
+                window['-t_tore-'].update(False)
+                values['-t_tore-'] = False
+                val = line.split("=")[1]
+                val = val.split("\n")[0]
+                window['-t_model_redir-'].update(val)
+                values['-t_model_redir-'] = val
+
         if line.__contains__("checkpoint_dir="):
             val = line.split("=")[1]
             val = val.split("\n")[0]
