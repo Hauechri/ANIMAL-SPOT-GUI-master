@@ -75,8 +75,8 @@ p_start_prediction_button=sg.Button(button_text="Start Prediction", key="p_start
 #sg.Print('Re-routing pred_GUI to Debug stdout', do_not_reroute_stdout=False)
 
 pred_layout=[
-    [p_src_dir_label, p_src_dir_input, p_src_dir_filebrowser],
     [p_model_dir_label, p_model_dir_input, p_model_dir_filebrowser],
+    [p_src_dir_label, p_src_dir_input, p_src_dir_filebrowser],
     [p_log_dir_label, p_log_dir_input, p_log_dir_filebrowser],
     [p_output_dir_label, p_output_dir_input, p_output_dir_filebrowser],
     [p_input_file_label, p_input_file_input, p_input_file_filebrowser],

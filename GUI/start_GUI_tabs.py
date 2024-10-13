@@ -11,6 +11,7 @@ import utils.PySimpleGUIQt as sg
 from train_GUI import getTrainGUI, TrainhandleInput
 from pred_GUI import getPredGUI, PredhandleInput
 from eval_GUI import getEvalGUI, EvalhandleInput
+from retrain_GUI import getRetrainGUI, RetrainhandleInput
 working_directory=os.getcwd()
 
 sg.set_options(font=("Arial Bold",14))
@@ -18,10 +19,11 @@ sg.set_options(font=("Arial Bold",14))
 train_column = getTrainGUI()
 pred_column = getPredGUI()
 eval_column = getEvalGUI()
-
+retrain_column = getRetrainGUI()
 layout = [[sg.TabGroup([
     [
         sg.Tab('Train', train_column),
+        sg.Tab('Retrain', retrain_column),
         sg.Tab('Prediction', pred_column),
         sg.Tab('Translation', eval_column)
     ]])],
@@ -32,6 +34,7 @@ window = sg.Window('ANIMAL-SPOT-GUI', layout, finalize=True)
 while True:
    event, values = window.read()
    TrainhandleInput(event=event, values=values, window=window)
+   RetrainhandleInput(event=event, values=values, window=window)
    PredhandleInput(event=event, values=values, window=window)
    EvalhandleInput(event=event, values=values, window=window)
    print (event, values)

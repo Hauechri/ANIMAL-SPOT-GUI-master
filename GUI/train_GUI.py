@@ -153,11 +153,11 @@ t_start_prediction_button=sg.Button(button_text="Start Training", key="t_start")
 #sg.Print('Re-routing train_GUI to Debug stdout', do_not_reroute_stdout=False)
 
 train_layout=[
+    [t_model_dir_label, t_model_dir_input, t_model_dir_filebrowser],
     [t_src_dir_label,t_src_dir_input,t_src_dir_filebrowser],
     [t_data_dir_label,t_data_dir_input,t_data_dir_filebrowser],
     [t_noise_dir_label,t_noise_dir_input,t_noise_dir_filebrowser],
     [t_cache_dir_label,t_cache_dir_input,t_cache_dir_filebrowser],
-    [t_model_dir_label,t_model_dir_input,t_model_dir_filebrowser],
     [t_checkpoint_dir_label,t_checkpoint_dir_input,t_checkpoint_dir_filebrowser],
     [t_log_dir_label,t_log_dir_input,t_log_dir_filebrowser],
     [t_summary_dir_label,t_summary_dir_input,t_summary_dir_filebrowser],
