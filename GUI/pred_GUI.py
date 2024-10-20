@@ -2,6 +2,8 @@ import utils.PySimpleGUIQt as sg
 import os
 import logging
 import threading
+from pathlib import Path
+import sys
 working_directory=os.getcwd()
 
 sg.set_options(font=("Arial Bold",14))
@@ -317,7 +319,10 @@ def loadPredConfig(values, window):
     file.close()
 
 def startPrediction(values):
-    pred_cmd = "python -W ignore::UserWarning"
+    GUI_path = Path(os.path.abspath(os.path.dirname(__file__)))
+    ASG_path = GUI_path.parent.absolute()
+    pythonexe = os.path.join(ASG_path, 'venv/Scripts/python.exe')
+    pred_cmd = pythonexe + " -W ignore::UserWarning"
 
     #Directorys
     if values["-p_src_dir-"] == "":

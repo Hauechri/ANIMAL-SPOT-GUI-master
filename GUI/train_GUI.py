@@ -4,6 +4,7 @@ import sys
 import logging
 import multiprocessing as mp
 import threading
+from pathlib import Path
 
 working_directory=os.getcwd()
 
@@ -643,7 +644,10 @@ def loadTrainConfig(values, window):
     file.close()
 
 def startTraining(values):
-    train_cmd = "python -W ignore::UserWarning"
+    GUI_path = Path(os.path.abspath(os.path.dirname(__file__)))
+    ASG_path = GUI_path.parent.absolute()
+    pythonexe = os.path.join(ASG_path, 'venv/Scripts/python.exe')
+    train_cmd = pythonexe + " -W ignore::UserWarning"
     if values["-t_src_dir-"] == "":
         sg.popup_error("ANIMAL-SPOT source File not set")
         return

@@ -1,6 +1,8 @@
 import utils.PySimpleGUIQt as sg
 import EVALUATION.start_evaluation as se
 import os
+from pathlib import Path
+import sys
 working_directory=os.getcwd()
 
 sg.set_options(font=("Arial Bold",14))
