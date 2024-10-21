@@ -454,15 +454,15 @@ def loadTrainConfig(values, window):
             values['-t_cache_dir-'] = val
         if line.__contains__("model_dir="):
             if line.__contains__("/\n"):
-                window['-t_tore-'].update(True)
-                values['-t_tore-'] = True
+                window['-t_tore-'].update(False)
+                values['-t_tore-'] = False
                 val = line.split("=")[1]
                 val = val.split("\n")[0]
                 window['-t_model_dir-'].update(val)
                 values['-t_model_dir-'] = val
             else:
-                window['-t_tore-'].update(False)
-                values['-t_tore-'] = False
+                window['-t_tore-'].update(True)
+                values['-t_tore-'] = True
                 val = line.split("=")[1]
                 val = val.split("\n")[0]
                 window['-t_model_redir-'].update(val)

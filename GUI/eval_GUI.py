@@ -128,10 +128,11 @@ def getEvalConfig(values):
     config_data["threshold"] = values["-e_threshold-"]
     if values["-e_noise_in_anno-"] == "true":
         config_data["noise_in_anno"] = ""
-
+    return config_data
 
 def startEvaluation(values):
-    evaluator = se.setup_evaluator()
+    config_data = getEvalConfig(values)
+    evaluator = se.setup_evaluator(config=config_data)
+    evaluator.config_data = config_data
     evaluator.init_logger()
-    evaluator.config_data = getEvalConfig(values)
     evaluator.process()
