@@ -254,8 +254,11 @@ if __name__ == "__main__":
     for file_name in audio_files:
         if platform.system() == "Windows":
             if audio_folder is not None:
-                file_name = str(audio_folder) + "\\" + str(file_name)
-            file_log = PredictionLogger(file_name.split("\\")[-1].split(".")[0].strip() + "_predict_output", ARGS.debug, ARGS.output_dir)
+                #file_name = str(audio_folder) + "\\" + str(file_name)
+                file_name = str(audio_folder) + "/" + str(file_name)
+            #file_log = PredictionLogger(file_name.split("\\")[-1].split(".")[0].strip() + "_predict_output", ARGS.debug, ARGS.output_dir)
+            file_log = PredictionLogger(file_name.split("/")[-1].split(".")[0].strip() + "_predict_output", ARGS.debug,
+                                        ARGS.output_dir)
         else:
             if audio_folder is not None:
                 file_name = str(audio_folder) + "/" + str(file_name)

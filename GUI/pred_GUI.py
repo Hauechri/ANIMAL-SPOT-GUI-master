@@ -14,7 +14,7 @@ p_src_dir_filebrowser=sg.FolderBrowse(initial_folder=working_directory)
 
 p_model_dir_label=sg.Text("Enter model directory:")
 p_model_dir_input=sg.InputText(key="-p_model_dir-")
-p_model_dir_filebrowser=sg.FolderBrowse(initial_folder=working_directory)
+p_model_dir_filebrowser=sg.FileBrowse(initial_folder=working_directory)
 
 p_log_dir_label=sg.Text("Enter log directory:")
 p_log_dir_input=sg.InputText(key="-p_log_dir-")
@@ -24,9 +24,9 @@ p_output_dir_label=sg.Text("Enter output directory:")
 p_output_dir_input=sg.InputText(key="-p_output_dir-")
 p_output_dir_filebrowser=sg.FolderBrowse(initial_folder=working_directory)
 
-p_input_file_label=sg.Text("Enter Input file or directory:")
+p_input_file_label=sg.Text("Enter Input file:")
 p_input_file_input=sg.InputText(key="-p_input_file-")
-p_input_file_filebrowser=sg.FolderBrowse(initial_folder=working_directory)
+p_input_file_filebrowser=sg.FileBrowse(initial_folder=working_directory)
 
 p_debug_label=sg.Text("Enable debug:")
 p_debug_checkbox=sg.Checkbox(text="", default=False, key="-p_debug-")
@@ -142,7 +142,7 @@ def generatePredConfig(values):
         sg.popup_error("Model directory not specified")
         file.close()
         return
-    file.write("model_path=" + str(values["-p_model_dir-"]) + "/\n")
+    file.write("model_path=" + str(values["-p_model_dir-"]) + "\n")
 
     if values["-p_log_dir-"] == "":
         sg.popup_error("Checkpoint directory not specified")
@@ -160,7 +160,7 @@ def generatePredConfig(values):
         sg.popup_error("Data directory not specified")
         file.close()
         return
-    file.write("input_file=" + str(values["-p_input_file-"]) + "/\n")
+    file.write("input_file=" + str(values["-p_input_file-"]) + "\n")
 
     #Boolean Parameter
     if values["-p_debug-"] is True:  # optional
@@ -294,8 +294,10 @@ def loadPredConfig(values, window):
         if line.__contains__("sequence_len="):
             val = line.split("=")[1]
             val = val.split("\n")[0]
-            window['-p_sequence_len-'].update(val)
-            values['-p_sequence_len-'] = val
+            value = float(val) * 1000.0
+            value = str(int(value))
+            window['-p_sequence_len-'].update(value)
+            values['-p_sequence_len-'] = value
         if line.__contains__("hop="):
             val = line.split("=")[1]
             val = val.split("\n")[0]
@@ -336,7 +338,7 @@ def startPrediction(values):
     if values["-p_model_dir-"] == "":
         sg.popup_error("Model directory not specified")
         return
-    pred_cmd = pred_cmd + " --model_dir " + values["-p_model_dir-"]+"/"
+    pred_cmd = pred_cmd + " --model_path " + values["-p_model_dir-"]
 
     if values["-p_log_dir-"] == "":
         sg.popup_error("Checkpoint directory not specified")
