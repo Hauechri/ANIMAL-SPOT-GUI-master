@@ -323,7 +323,7 @@ def loadPredConfig(values, window):
 def startPrediction(values):
     GUI_path = Path(os.path.abspath(os.path.dirname(__file__)))
     ASG_path = GUI_path.parent.absolute()
-    pythonexe = os.path.join(ASG_path, 'venv/Scripts/python.exe')
+    pythonexe = 'python'#os.path.join(ASG_path, 'venv/Scripts/python.exe')
     pred_cmd = pythonexe + " -W ignore::UserWarning"
 
     #Directorys

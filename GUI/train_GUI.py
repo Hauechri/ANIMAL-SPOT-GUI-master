@@ -646,7 +646,7 @@ def loadTrainConfig(values, window):
 def startTraining(values):
     GUI_path = Path(os.path.abspath(os.path.dirname(__file__)))
     ASG_path = GUI_path.parent.absolute()
-    pythonexe = os.path.join(ASG_path, 'venv/Scripts/python.exe')
+    pythonexe = 'python'#os.path.join(ASG_path, 'venv/Scripts/python.exe')
     train_cmd = pythonexe + " -W ignore::UserWarning"
     if values["-t_src_dir-"] == "":
         sg.popup_error("ANIMAL-SPOT source File not set")
