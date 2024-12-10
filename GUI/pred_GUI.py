@@ -12,7 +12,7 @@ p_src_dir_label=sg.Text("Enter ANIMAL-SPOT source directory:")
 p_src_dir_input=sg.InputText(key="-p_src_dir-")
 p_src_dir_filebrowser=sg.FolderBrowse(initial_folder=working_directory)
 
-p_model_dir_label=sg.Text("Enter model directory:")
+p_model_dir_label=sg.Text("Enter model path:")
 p_model_dir_input=sg.InputText(key="-p_model_dir-")
 p_model_dir_filebrowser=sg.FileBrowse(initial_folder=working_directory)
 
