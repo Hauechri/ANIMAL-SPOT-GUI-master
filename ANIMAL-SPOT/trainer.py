@@ -128,28 +128,71 @@ class Trainer:
             checkpoint = self.cp.read_latest()
             if checkpoint is not None:
                 try:
-                    try:
-                        self.model.load_state_dict(checkpoint["modelState"])
-                    except RuntimeError as e:
-                        self.logger.error(
-                            "Failed to restore checkpoint: "
-                            "Checkpoint has different parameters"
-                        )
-                        self.logger.error(e)
-                        raise SystemExit
+                    checkpoint_state = checkpoint["modelState"]
 
-                    optimizer.load_state_dict(checkpoint["trainState"]["optState"])
-                    start_epoch = checkpoint["trainState"]["epoch"] + 1
-                    best_metric = checkpoint["trainState"]["best_metric"]
-                    best_model = checkpoint["trainState"]["best_model"]
-                    early_stopping.load_state_dict(
-                        checkpoint["trainState"]["earlyStopping"]
-                    )
-                    scheduler.load_state_dict(checkpoint["trainState"]["scheduler"])
-                    self.logger.info("Resuming with epoch {}".format(start_epoch))
+                    encoder_loaded = False
+                    classifier_loaded = False
+
+                    encoder_state = {k.replace("encoder.", ""): v for k, v in checkpoint_state.items() if
+                                     k.startswith("encoder.")}
+                    classifier_state = {k.replace("classifier.", ""): v for k, v in checkpoint_state.items() if
+                                        k.startswith("classifier.")}
+
+                    # Try loading encoder
+                    if encoder_state:
+                        try:
+                            #self.model.encoder.load_state_dict(checkpoint_state["encoder"])
+                            self.model.encoder.load_state_dict(encoder_state)
+                            encoder_loaded = True
+                            self.logger.info("Loaded encoder weights from checkpoint.")
+                        except RuntimeError as e:
+                            self.logger.warning("Failed to load encoder weights, will train from scratch.")
+                            self.logger.warning(str(e))
+                    else:
+                        self.logger.warning("No encoder found in checkpoint; will train encoder from scratch.")
+
+                    # Try loading classifier
+                    if classifier_state:
+                        try:
+                            #self.model.classifier.load_state_dict(checkpoint_state["classifier"])
+                            self.model.classifier.load_state_dict(classifier_state)
+                            classifier_loaded = True
+                            self.logger.info("Loaded classifier weights from checkpoint.")
+                        except RuntimeError as e:
+                            self.logger.warning(
+                                "Failed to load classifier weights, rebuilding classifier from scratch.")
+                            self.logger.warning(str(e))
+                    else:
+                        self.logger.warning("No classifier found in checkpoint; will train classifier from scratch.")
+
+                    # Handle partial success
+                    if encoder_loaded and not classifier_loaded:
+                        self.logger.info("Using pretrained encoder and new classifier (transfer learning mode).")
+                        # keep current (new) classifier instance, don't overwrite it
+                        # Do NOT load optimizer, scheduler, etc.
+                        start_epoch = 0
+                        best_metric = 0.0 if val_metric_mode == "max" else float("inf")
+                        best_model = copy.deepcopy(self.model.state_dict())
+
+                    elif encoder_loaded and classifier_loaded:
+                        # full checkpoint load successful, continue training
+                        optimizer.load_state_dict(checkpoint["trainState"]["optState"])
+                        start_epoch = checkpoint["trainState"]["epoch"] + 1
+                        best_metric = checkpoint["trainState"]["best_metric"]
+                        best_model = checkpoint["trainState"]["best_model"]
+                        early_stopping.load_state_dict(checkpoint["trainState"]["earlyStopping"])
+                        scheduler.load_state_dict(checkpoint["trainState"]["scheduler"])
+                        self.logger.info("Resuming full training from epoch {}".format(start_epoch))
+
+                    else:
+                        # neither loaded properly
+                        self.logger.warning("Failed to load encoder and classifier; starting from scratch.")
+                        start_epoch = 0
+                        best_metric = 0.0 if val_metric_mode == "max" else float("inf")
+                        best_model = copy.deepcopy(self.model.state_dict())
+
                 except KeyError:
-                    self.logger.error("Failed to restore checkpoint")
-                    raise
+                    self.logger.error("Failed to restore checkpoint structure, starting from scratch.")
 
         since = time.time()
 
@@ -469,9 +512,9 @@ class Trainer:
 
                 for idx in range(len(t_i)):
                     if t_i[idx]:
-                        name_t = "true - " + str(self.get_class_type_from_idx(labels[idx].item())) + " as " + str(self.get_class_type_from_idx(prediction[idx].item()))
+                        name_t = "true - " + str(self.get_class_type_from_idx(labels[idx].item())) + " as " + str(self.get_class_type_from_idx(prediction[idx]))
                     else:
-                        name_t = "false - " + str(self.get_class_type_from_idx(labels[idx].item())) + " as " + str(self.get_class_type_from_idx(prediction[idx].item()))
+                        name_t = "false - " + str(self.get_class_type_from_idx(labels[idx].item())) + " as " + str(self.get_class_type_from_idx(prediction[idx]))
 
                     try:
                         self.writer.add_image(
