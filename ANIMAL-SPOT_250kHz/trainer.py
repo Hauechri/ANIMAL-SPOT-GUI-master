@@ -132,17 +132,17 @@ class Trainer:
 
                     encoder_loaded = False
                     classifier_loaded = False
-                    #encoder_state = {k.replace("encoder.", ""): v for k, v in checkpoint_state.items() if
-                    #                 k.startswith("encoder.")}
-                    #classifier_state = {k.replace("classifier.", ""): v for k, v in checkpoint_state.items() if
-                    #                    k.startswith("classifier.")}
-                    #elf.model.encoder.load_state_dict(encoder_state)
-                    #self.model.classifier.load_state_dict(classifier_state)
+
+                    encoder_state = {k.replace("encoder.", ""): v for k, v in checkpoint_state.items() if
+                                     k.startswith("encoder.")}
+                    classifier_state = {k.replace("classifier.", ""): v for k, v in checkpoint_state.items() if
+                                        k.startswith("classifier.")}
 
                     # Try loading encoder
-                    if "encoder" in checkpoint_state:
+                    if encoder_state:
                         try:
-                            self.model.encoder.load_state_dict(checkpoint_state["encoder"])
+                            #self.model.encoder.load_state_dict(checkpoint_state["encoder"])
+                            self.model.encoder.load_state_dict(encoder_state)
                             encoder_loaded = True
                             self.logger.info("Loaded encoder weights from checkpoint.")
                         except RuntimeError as e:
@@ -152,9 +152,10 @@ class Trainer:
                         self.logger.warning("No encoder found in checkpoint; will train encoder from scratch.")
 
                     # Try loading classifier
-                    if "classifier" in checkpoint_state:
+                    if classifier_state:
                         try:
-                            self.model.classifier.load_state_dict(checkpoint_state["classifier"])
+                            #self.model.classifier.load_state_dict(checkpoint_state["classifier"])
+                            self.model.classifier.load_state_dict(classifier_state)
                             classifier_loaded = True
                             self.logger.info("Loaded classifier weights from checkpoint.")
                         except RuntimeError as e:
