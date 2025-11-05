@@ -114,6 +114,8 @@ class Trainer:
         self.logger.info("Init model on device '{}'".format(device))
         self.model = self.model.to(device)
         self.class_dist_dict = train_loader.dataset.class_dist_dict
+        self.encoder_loaded = False
+        self.classifier_loaded = False
 
         best_model = copy.deepcopy(self.model.state_dict())
         best_metric = 0.0 if val_metric_mode == "max" else float("inf")
@@ -130,8 +132,8 @@ class Trainer:
                 try:
                     checkpoint_state = checkpoint["modelState"]
 
-                    encoder_loaded = False
-                    classifier_loaded = False
+                    self.encoder_loaded = False
+                    self.classifier_loaded = False
 
                     encoder_state = {k.replace("encoder.", ""): v for k, v in checkpoint_state.items() if
                                      k.startswith("encoder.")}
@@ -143,7 +145,7 @@ class Trainer:
                         try:
                             #self.model.encoder.load_state_dict(checkpoint_state["encoder"])
                             self.model.encoder.load_state_dict(encoder_state)
-                            encoder_loaded = True
+                            self.encoder_loaded = True
                             self.logger.info("Loaded encoder weights from checkpoint.")
                         except RuntimeError as e:
                             self.logger.warning("Failed to load encoder weights, will train from scratch.")
@@ -156,7 +158,7 @@ class Trainer:
                         try:
                             #self.model.classifier.load_state_dict(checkpoint_state["classifier"])
                             self.model.classifier.load_state_dict(classifier_state)
-                            classifier_loaded = True
+                            self.classifier_loaded = True
                             self.logger.info("Loaded classifier weights from checkpoint.")
                         except RuntimeError as e:
                             self.logger.warning(
@@ -166,7 +168,7 @@ class Trainer:
                         self.logger.warning("No classifier found in checkpoint; will train classifier from scratch.")
 
                     # Handle partial success
-                    if encoder_loaded and not classifier_loaded:
+                    if self.encoder_loaded and not self.classifier_loaded:
                         self.logger.info("Using pretrained encoder and new classifier (transfer learning mode).")
                         # keep current (new) classifier instance, don't overwrite it
                         # Do NOT load optimizer, scheduler, etc.
@@ -174,7 +176,7 @@ class Trainer:
                         best_metric = 0.0 if val_metric_mode == "max" else float("inf")
                         best_model = copy.deepcopy(self.model.state_dict())
 
-                    elif encoder_loaded and classifier_loaded:
+                    elif self.encoder_loaded and self.classifier_loaded:
                         # full checkpoint load successful, continue training
                         optimizer.load_state_dict(checkpoint["trainState"]["optState"])
                         start_epoch = checkpoint["trainState"]["epoch"] + 1
@@ -264,6 +266,23 @@ class Trainer:
                 time_elapsed // 60, time_elapsed % 60
             )
         )
+        if not self.start_scratch and self.cp is not None:
+            if self.encoder_loaded and self.classifier_loaded:
+                self.logger.info(
+                    "Continued training from checkpoint."
+                )
+            elif self.encoder_loaded and not self.classifier_loaded:
+                self.logger.info(
+                    "Transfer learning."
+                )
+            else:
+                self.logger.info(
+                    "Trained from scratch."
+                )
+        else:
+            self.logger.info(
+                "Trained from scratch."
+            )
         self.logger.info("Best val metric: {:4f}".format(best_metric))
         self.logger.info("Final test metric: {:4f}".format(final_metric))
 
