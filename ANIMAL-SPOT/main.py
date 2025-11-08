@@ -273,6 +273,20 @@ parser.add_argument(
     help="Use max pooling after the initial convolution layer.",
 )
 
+parser.add_argument(
+    "--transfer_dir",
+    type=str,
+    default=None,
+    help="The file path of a transfer learning model.",
+)
+
+parser.add_argument(
+    "--transfer",
+    dest="transfer",
+    action="store_true",
+    help="Use a transfer Model in trainer.",
+)
+
 ARGS = parser.parse_args()
 ARGS.cuda = torch.cuda.is_available() and ARGS.cuda
 ARGS.device = torch.device("cuda") if ARGS.cuda else torch.device("cpu")
@@ -506,6 +520,8 @@ if __name__ == "__main__":
         summary_dir=ARGS.summary_dir,
         n_summaries=4,
         start_scratch=ARGS.start_scratch,
+        transfer=ARGS.transfer,
+        transfer_model=ARGS.transfer_dir
     )
 
     optimizer = optim.Adam(

@@ -41,6 +41,13 @@ t_checkpoint_dir_label=sg.Text("Enter checkpoint directory:")
 t_checkpoint_dir_input=sg.InputText(key="-t_checkpoint_dir-")
 t_checkpoint_dir_filebrowser=sg.FolderBrowse(initial_folder=working_directory)
 
+t_transfer_learning_label=sg.Text("Use Transfer Learning:")
+t_transfer_learning=sg.Checkbox(text="", default=False, key="-t_transfer-")
+
+t_transfer_model_label=sg.Text("Enter transfer Model file:")
+t_transfer_model_input=sg.InputText(key="-t_transfer_model-")
+t_transfer_model_filebrowser=sg.FileBrowse(initial_folder=working_directory)
+
 t_log_dir_label=sg.Text("Enter log directory:")
 t_log_dir_input=sg.InputText(key="-t_log_dir-")
 t_log_dir_filebrowser=sg.FolderBrowse(initial_folder=working_directory)
@@ -169,6 +176,8 @@ train_layout=[
     [t_noise_dir_label,t_noise_dir_input,t_noise_dir_filebrowser],
     [t_cache_dir_label,t_cache_dir_input,t_cache_dir_filebrowser],
     [t_checkpoint_dir_label,t_checkpoint_dir_input,t_checkpoint_dir_filebrowser],
+    [t_transfer_learning_label, t_transfer_learning],
+    [t_transfer_model_label,t_transfer_model_input,t_transfer_model_filebrowser],
     [t_log_dir_label,t_log_dir_input,t_log_dir_filebrowser],
     [t_summary_dir_label,t_summary_dir_input,t_summary_dir_filebrowser],
     [t_debug_label,t_debug_checkbox],
@@ -298,7 +307,6 @@ def generateTrainConfig(values):
             return
         file.write("model_dir=" + str(values["-t_model_dir-"]) + "/\n")
 
-
     if values["-t_data_dir-"] == "":
         sg.popup_error("Data directory not specified")
         file.close()
@@ -327,6 +335,9 @@ def generateTrainConfig(values):
     if values["-t_log_dir-"] != "":  # optional
         file.write("log_dir=" + str(values["-t_log_dir-"]) + "/\n")
 
+    if values["-t_transfer_model-"] != "":  # optional
+        file.write("transfer_model=" + str(values["-t_transfer_model-"]) + "/\n")
+
     # Boolean Parameter
     if values["-t_debug-"] is True:  # optional
         file.write("debug=" + str(values["-t_debug-"]) + "\n")
@@ -338,10 +349,16 @@ def generateTrainConfig(values):
     else:
         file.write("start_from_scratch=False" + "\n")
 
+    if values["-t_transfer-"] == False:  # optional
+        file.write("transfer=True" + "\n")
+    else:
+        file.write("transfer=False" + "\n")
+
     if values["-t_no_cuda-"] == False:  # optional
         file.write("no_cuda=True" + "\n")
     else:
         file.write("no_cuda=False" + "\n")
+
 
     if values["-t_augmentation-"] is True:  # optional
         file.write("augmentation=" + str(values["-t_augmentation-"]) + "\n")
@@ -473,6 +490,11 @@ def loadTrainConfig(values, window):
             val = val.split("\n")[0]
             window['-t_checkpoint_dir-'].update(val)
             values['-t_checkpoint_dir-'] = val
+        if line.__contains__("transfer_model="):
+            val = line.split("=")[1]
+            val = val.split("\n")[0]
+            window['-t_transfer_model-'].update(val)
+            values['-t_transfer_model-'] = val
         if line.__contains__("log_dir="):
             val = line.split("=")[1]
             val = val.split("\n")[0]
@@ -500,6 +522,14 @@ def loadTrainConfig(values, window):
             else:
                 window['-t_start_from_scratch-'].update(False)
                 values['-t_start_from_scratch-'] = False
+        if line.__contains__("transfer="):
+            val = line.split("=")[1]
+            if val.__contains__("True") or val.__contains__("true"):
+                window['-t_transfer-'].update(True)
+                values['-t_transfer-'] = True
+            else:
+                window['-t_transfer-'].update(False)
+                values['-t_transfer-'] = False
         if line.__contains__("augmentation="):
             val = line.split("=")[1]
             if val.__contains__("True") or val.__contains__("true"):
@@ -687,6 +717,9 @@ def startTraining(values):
     if values["-t_log_dir-"] != "":  # optional
         train_cmd = train_cmd + " --log_dir " + values["-t_log_dir-"]+"/"
 
+    if values["-t_transfer_model-"] != "":  # optional
+        train_cmd = train_cmd + " --transfer_dir " + values["-t_transfer_model-"]+"/"
+
     #Boolean Parameter
     if values["-t_debug-"] is True:  # optional
         train_cmd = train_cmd + " --debug"
@@ -694,7 +727,10 @@ def startTraining(values):
     if values["-t_start_from_scratch-"] is True:  # optional
         train_cmd = train_cmd + " --start_from_scratch"
 
-    if values["-t_no_cuda-"] == False:  # optional
+    if values["-t_transfer-"] is True:  # optional
+        train_cmd = train_cmd + " --transfer"
+
+    if values["-t_no_cuda-"] is False:  # optional # use Cuda:?
         train_cmd = train_cmd + " --no_cuda"
 
     if values["-t_augmentation-"] is True:  # optional

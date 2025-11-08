@@ -54,6 +54,8 @@ class Trainer:
         n_summaries: int = 4,
         input_shape: tuple = None,
         start_scratch: bool = False,
+        transfer: bool = False,
+        transfer_model: Union[str, None] = None,
     ):
         self.model = model
         self.logger = logger
@@ -85,6 +87,8 @@ class Trainer:
             self.cp = None
 
         self.start_scratch = start_scratch
+        self.transfer = transfer
+        self.transfer_model = transfer_model
 
         self.class_dist_dict = None
 
@@ -117,84 +121,123 @@ class Trainer:
         self.encoder_loaded = False
         self.classifier_loaded = False
 
-        best_model = copy.deepcopy(self.model.state_dict())
-        best_metric = 0.0 if val_metric_mode == "max" else float("inf")
-
         patience_stopping = math.ceil(patience_early_stopping / val_interval)
         patience_stopping = int(max(1, patience_stopping))
         early_stopping = EarlyStoppingCriterion(
             mode=val_metric_mode, patience=patience_stopping
         )
+        start_epoch = 0
+        best_metric = 0.0 if val_metric_mode == "max" else float("inf")
+        best_model = copy.deepcopy(self.model.state_dict())
+        self.encoder_loaded = False
+        self.classifier_loaded = False
 
-        if not self.start_scratch and self.cp is not None:
-            checkpoint = self.cp.read_latest()
-            if checkpoint is not None:
+        if not self.start_scratch:
+            # --- TRANSFER MODE ---
+            if self.transfer and self.transfer_model is not None:
+                self.logger.info("Attempting to load transfer model.")
                 try:
-                    checkpoint_state = checkpoint["modelState"]
-
-                    self.encoder_loaded = False
-                    self.classifier_loaded = False
-
-                    encoder_state = {k.replace("encoder.", ""): v for k, v in checkpoint_state.items() if
-                                     k.startswith("encoder.")}
-                    classifier_state = {k.replace("classifier.", ""): v for k, v in checkpoint_state.items() if
-                                        k.startswith("classifier.")}
+                    encoder_state = self.transfer_model["encoderState"]
+                    classifier_state = self.transfer_model["classifierState"]
 
                     # Try loading encoder
                     if encoder_state:
                         try:
-                            #self.model.encoder.load_state_dict(checkpoint_state["encoder"])
                             self.model.encoder.load_state_dict(encoder_state)
                             self.encoder_loaded = True
-                            self.logger.info("Loaded encoder weights from checkpoint.")
+                            self.logger.info("Loaded encoder weights from transfer model.")
                         except RuntimeError as e:
-                            self.logger.warning("Failed to load encoder weights, will train from scratch.")
+                            self.logger.warning("Failed to load encoder weights from transfer model.")
                             self.logger.warning(str(e))
-                    else:
-                        self.logger.warning("No encoder found in checkpoint; will train encoder from scratch.")
 
                     # Try loading classifier
                     if classifier_state:
                         try:
-                            #self.model.classifier.load_state_dict(checkpoint_state["classifier"])
                             self.model.classifier.load_state_dict(classifier_state)
                             self.classifier_loaded = True
-                            self.logger.info("Loaded classifier weights from checkpoint.")
+                            self.logger.info("Loaded classifier weights from transfer model.")
                         except RuntimeError as e:
-                            self.logger.warning(
-                                "Failed to load classifier weights, rebuilding classifier from scratch.")
+                            self.logger.warning("Failed to load classifier weights from transfer model.")
                             self.logger.warning(str(e))
-                    else:
-                        self.logger.warning("No classifier found in checkpoint; will train classifier from scratch.")
 
-                    # Handle partial success
+                    # If only encoder loaded, use it with new classifier
                     if self.encoder_loaded and not self.classifier_loaded:
                         self.logger.info("Using pretrained encoder and new classifier (transfer learning mode).")
-                        # keep current (new) classifier instance, don't overwrite it
-                        # Do NOT load optimizer, scheduler, etc.
-                        start_epoch = 0
-                        best_metric = 0.0 if val_metric_mode == "max" else float("inf")
-                        best_model = copy.deepcopy(self.model.state_dict())
+                        # Keep defaults (start from scratch)
 
+                    # If both loaded, reset metrics (start from scratch)
                     elif self.encoder_loaded and self.classifier_loaded:
-                        # full checkpoint load successful, continue training
-                        optimizer.load_state_dict(checkpoint["trainState"]["optState"])
-                        start_epoch = checkpoint["trainState"]["epoch"] + 1
-                        best_metric = checkpoint["trainState"]["best_metric"]
-                        best_model = checkpoint["trainState"]["best_model"]
-                        early_stopping.load_state_dict(checkpoint["trainState"]["earlyStopping"])
-                        scheduler.load_state_dict(checkpoint["trainState"]["scheduler"])
-                        self.logger.info("Resuming full training from epoch {}".format(start_epoch))
+                        self.logger.info(
+                            "Loaded both encoder and classifier from transfer model, starting from scratch.")
+                        # Keep defaults (start from scratch)
 
+                    # If neither loaded, keep defaults (start from scratch)
                     else:
-                        # neither loaded properly
-                        self.logger.warning("Failed to load encoder and classifier; starting from scratch.")
-                        start_epoch = 0
-                        best_metric = 0.0 if val_metric_mode == "max" else float("inf")
-                        best_model = copy.deepcopy(self.model.state_dict())
+                        self.logger.warning(
+                            "Failed to load both encoder and classifier from transfer model; starting from scratch.")
 
-                except KeyError:
-                    self.logger.error("Failed to restore checkpoint structure, starting from scratch.")
+                except Exception as e:
+                    self.logger.error("Failed to restore transfer model structure, starting from scratch.")
+                    # Keep defaults (start from scratch)
+
+            # --- CHECKPOINT MODE ---
+            elif self.cp is not None:
+                checkpoint = self.cp.read_latest()
+                if checkpoint is not None:
+                    try:
+                        checkpoint_state = checkpoint["modelState"]
+                        encoder_state = {k.replace("encoder.", ""): v for k, v in checkpoint_state.items() if
+                                         k.startswith("encoder.")}
+                        classifier_state = {k.replace("classifier.", ""): v for k, v in checkpoint_state.items() if
+                                            k.startswith("classifier.")}
+
+                        # Try loading encoder
+                        if encoder_state:
+                            try:
+                                self.model.encoder.load_state_dict(encoder_state)
+                                self.encoder_loaded = True
+                                self.logger.info("Loaded encoder weights from checkpoint.")
+                            except RuntimeError as e:
+                                self.logger.warning("Failed to load encoder weights, will train from scratch.")
+                                self.logger.warning(str(e))
+
+                        # Try loading classifier
+                        if classifier_state:
+                            try:
+                                self.model.classifier.load_state_dict(classifier_state)
+                                self.classifier_loaded = True
+                                self.logger.info("Loaded classifier weights from checkpoint.")
+                            except RuntimeError as e:
+                                self.logger.warning(
+                                    "Failed to load classifier weights, rebuilding classifier from scratch.")
+                                self.logger.warning(str(e))
+
+                        # Handle partial success
+                        if self.encoder_loaded and not self.classifier_loaded:
+                            self.logger.info("Using pretrained encoder and new classifier (transfer learning mode).")
+                            # Keep defaults (start from scratch)
+
+                        elif self.encoder_loaded and self.classifier_loaded:
+                            # Full checkpoint load successful, continue training
+                            optimizer.load_state_dict(checkpoint["trainState"]["optState"])
+                            start_epoch = checkpoint["trainState"]["epoch"] + 1
+                            best_metric = checkpoint["trainState"]["best_metric"]
+                            best_model = checkpoint["trainState"]["best_model"]
+                            early_stopping.load_state_dict(checkpoint["trainState"]["earlyStopping"])
+                            scheduler.load_state_dict(checkpoint["trainState"]["scheduler"])
+                            self.logger.info(f"Resuming full training from epoch {start_epoch}")
+
+                        else:
+                            self.logger.warning("Failed to load encoder and classifier; starting from scratch.")
+                            # Keep defaults (start from scratch)
+
+                    except KeyError:
+                        self.logger.error("Failed to restore checkpoint structure, starting from scratch.")
+                        # Keep defaults (start from scratch)
+
+        # If start_scratch is True, or all else fails, defaults are already set
+        if self.start_scratch or (not self.encoder_loaded and not self.classifier_loaded):
+            self.logger.info("Starting from scratch.")
 
         since = time.time()
 
