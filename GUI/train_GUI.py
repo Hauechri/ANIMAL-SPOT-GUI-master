@@ -44,7 +44,7 @@ t_checkpoint_dir_filebrowser=sg.FolderBrowse(initial_folder=working_directory)
 t_transfer_learning_label=sg.Text("Use Transfer Learning:")
 t_transfer_learning=sg.Checkbox(text="", default=False, key="-t_transfer-")
 
-t_transfer_model_label=sg.Text("Enter transfer Model file:")
+t_transfer_model_label=sg.Text("Enter transfer model file:")
 t_transfer_model_input=sg.InputText(key="-t_transfer_model-")
 t_transfer_model_filebrowser=sg.FileBrowse(initial_folder=working_directory)
 
