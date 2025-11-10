@@ -137,8 +137,9 @@ class Trainer:
             if self.transfer and self.transfer_model is not None:
                 self.logger.info("Attempting to load transfer model.")
                 try:
-                    encoder_state = self.transfer_model["encoderState"]
-                    classifier_state = self.transfer_model["classifierState"]
+                    model_transfer = torch.load(self.transfer_model)
+                    encoder_state = model_transfer["encoderState"]
+                    classifier_state = model_transfer["classifierState"]
 
                     # Try loading encoder
                     if encoder_state:

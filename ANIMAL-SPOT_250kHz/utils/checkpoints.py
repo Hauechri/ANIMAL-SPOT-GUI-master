@@ -86,7 +86,8 @@ class CheckpointHandler:
         if self.checkpoint_dir is None:
             return
         checkpoints = glob.glob(
-            os.path.join(self.checkpoint_dir, self.prefix + "*.checkpoint")
+            #os.path.join(self.checkpoint_dir, self.prefix + "*.checkpoint")
+            os.path.join(self.checkpoint_dir, "*.checkpoint")
         )
         if len(checkpoints) == 0:
             self._logger.info("No checkpoints found in {}".format(self.checkpoint_dir))
