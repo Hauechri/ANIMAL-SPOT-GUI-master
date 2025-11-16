@@ -178,7 +178,7 @@ class Trainer:
                             "Failed to load both encoder and classifier from transfer model; starting from scratch.")
 
                 except Exception as e:
-                    self.logger.error("Failed to restore transfer model structure, starting from scratch.")
+                    self.logger.error("Failed to restore transfer model structure: "+self.transfer_model+ " ,starting from scratch.")
                     # Keep defaults (start from scratch)
 
             # --- CHECKPOINT MODE ---
