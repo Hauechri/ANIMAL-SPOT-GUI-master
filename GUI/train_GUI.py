@@ -292,7 +292,7 @@ def generateTrainConfig(values):
         sg.popup_error("ANIMAL-SPOT source File not set")
         file.close()
         return
-    file.write("src_dir=" + str(values["-t_src_dir-"]) + "/\n")
+    file.write("src_dir=" + str(values["-t_src_dir-"]) + "\n")
 
     if values["-t_tore-"] is True:
         if values["-t_model_redir-"] == "":
@@ -305,38 +305,38 @@ def generateTrainConfig(values):
             sg.popup_error("Retrain disabled but model save directory not specified")
             file.close()
             return
-        file.write("model_dir=" + str(values["-t_model_dir-"]) + "/\n")
+        file.write("model_dir=" + str(values["-t_model_dir-"]) + "\n")
 
     if values["-t_data_dir-"] == "":
         sg.popup_error("Data directory not specified")
         file.close()
         return
-    file.write("data_dir=" + str(values["-t_data_dir-"]) + "/\n")
+    file.write("data_dir=" + str(values["-t_data_dir-"]) + "\n")
 
     if values["-t_checkpoint_dir-"] == "":
         sg.popup_error("Checkpoint directory not specified")
         file.close()
         return
-    file.write("checkpoint_dir=" + str(values["-t_checkpoint_dir-"]) + "/\n")
+    file.write("checkpoint_dir=" + str(values["-t_checkpoint_dir-"]) + "\n")
 
     if values["-t_summary_dir-"] == "":
         sg.popup_error("Summary directory not specified")
         file.close()
         return
-    file.write("summary_dir=" + str(values["-t_summary_dir-"]) + "/\n")
+    file.write("summary_dir=" + str(values["-t_summary_dir-"]) + "\n")
 
     # optional Directories
     if values["-t_noise_dir-"] != "":  # optional
-        file.write("noise_dir=" + str(values["-t_noise_dir-"]) + "/\n")
+        file.write("noise_dir=" + str(values["-t_noise_dir-"]) + "\n")
 
     if values["-t_cache_dir-"] != "":  # optional
-        file.write("cache_dir=" + str(values["-t_cache_dir-"]) + "/\n")
+        file.write("cache_dir=" + str(values["-t_cache_dir-"]) + "\n")
 
     if values["-t_log_dir-"] != "":  # optional
-        file.write("log_dir=" + str(values["-t_log_dir-"]) + "/\n")
+        file.write("log_dir=" + str(values["-t_log_dir-"]) + "\n")
 
     if values["-t_transfer_model-"] != "":  # optional
-        file.write("transfer_model=" + str(values["-t_transfer_model-"]) + "/\n")
+        file.write("transfer_model=" + str(values["-t_transfer_model-"]) + "\n")
 
     # Boolean Parameter
     if values["-t_debug-"] is True:  # optional
@@ -690,35 +690,35 @@ def startTraining(values):
     if values["-t_model_dir-"] == "":
         sg.popup_error("Model directory not specified")
         return
-    train_cmd = train_cmd + " --model_dir " + values["-t_model_dir-"]+"/"
+    train_cmd = train_cmd + " --model_dir " + values["-t_model_dir-"]
 
     if values["-t_data_dir-"] == "":
         sg.popup_error("Data directory not specified")
         return
-    train_cmd = train_cmd + " --data_dir " + values["-t_data_dir-"]+"/"
+    train_cmd = train_cmd + " --data_dir " + values["-t_data_dir-"]
 
     if values["-t_checkpoint_dir-"] == "":
         sg.popup_error("Checkpoint directory not specified")
         return
-    train_cmd = train_cmd + " --checkpoint_dir " + values["-t_checkpoint_dir-"]+"/"
+    train_cmd = train_cmd + " --checkpoint_dir " + values["-t_checkpoint_dir-"]
 
     if values["-t_summary_dir-"] == "":
         sg.popup_error("Summary directory not specified")
         return
-    train_cmd = train_cmd + " --summary_dir " + values["-t_summary_dir-"]+"/"
+    train_cmd = train_cmd + " --summary_dir " + values["-t_summary_dir-"]
 
     #optional Directories
     if values["-t_noise_dir-"] != "": # optional
-        train_cmd = train_cmd + " --noise_dir " + values["-t_noise_dir-"]+"/"
+        train_cmd = train_cmd + " --noise_dir " + values["-t_noise_dir-"]
 
     if values["-t_cache_dir-"] != "":  # optional
-        train_cmd = train_cmd + " --cache_dir " + values["-t_cache_dir-"]+"/"
+        train_cmd = train_cmd + " --cache_dir " + values["-t_cache_dir-"]
 
     if values["-t_log_dir-"] != "":  # optional
-        train_cmd = train_cmd + " --log_dir " + values["-t_log_dir-"]+"/"
+        train_cmd = train_cmd + " --log_dir " + values["-t_log_dir-"]
 
     if values["-t_transfer_model-"] != "":  # optional
-        train_cmd = train_cmd + " --transfer_dir " + values["-t_transfer_model-"]+"/"
+        train_cmd = train_cmd + " --transfer_dir " + values["-t_transfer_model-"]
 
     #Boolean Parameter
     if values["-t_debug-"] is True:  # optional

@@ -63,13 +63,13 @@ def generateEvalConfig(values):
         sg.popup_error("Prediction directory not set")
         file.close()
         return
-    file.write("prediction_dir="+str(values["-e_prediction_dir-"])+"/\n")
+    file.write("prediction_dir="+str(values["-e_prediction_dir-"])+"\n")
 
     if values["-e_output_dir-"] == "":
         sg.popup_error("Output directory not set")
         file.close()
         return
-    file.write("output_dir="+str(values["-e_output_dir-"])+"/\n")
+    file.write("output_dir="+str(values["-e_output_dir-"])+"\n")
 
     if values["-e_threshold-"] == "":
         sg.popup_error("Threshold not set")

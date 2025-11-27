@@ -136,7 +136,7 @@ def generatePredConfig(values):
         sg.popup_error("ANIMAL-SPOT source File not set")
         file.close()
         return
-    file.write("src_dir=" + str(values["-p_src_dir-"]) + "/\n")
+    file.write("src_dir=" + str(values["-p_src_dir-"]) + "\n")
 
     if values["-p_model_dir-"] == "":
         sg.popup_error("Model directory not specified")
@@ -148,13 +148,13 @@ def generatePredConfig(values):
         sg.popup_error("Checkpoint directory not specified")
         file.close()
         return
-    file.write("log_dir=" + str(values["-p_log_dir-"]) + "/\n")
+    file.write("log_dir=" + str(values["-p_log_dir-"]) + "\n")
 
     if values["-p_output_dir-"] == "":
         sg.popup_error("Output directory not specified")
         file.close()
         return
-    file.write("output_dir=" + str(values["-p_output_dir-"]) + "/\n")
+    file.write("output_dir=" + str(values["-p_output_dir-"]) + "\n")
 
     if values["-p_input_file-"] == "":
         sg.popup_error("Data directory not specified")
@@ -343,17 +343,17 @@ def startPrediction(values):
     if values["-p_log_dir-"] == "":
         sg.popup_error("Checkpoint directory not specified")
         return
-    pred_cmd = pred_cmd + " --log_dir " + values["-p_log_dir-"]+"/"
+    pred_cmd = pred_cmd + " --log_dir " + values["-p_log_dir-"]
 
     if values["-p_output_dir-"] == "":
         sg.popup_error("Output directory not specified")
         return
-    pred_cmd = pred_cmd + " --output_dir " + values["-p_output_dir-"]+"/"
+    pred_cmd = pred_cmd + " --output_dir " + values["-p_output_dir-"]
 
     if values["-p_input_file-"] == "":
         sg.popup_error("Data directory not specified")
         return
-    pred_cmd = pred_cmd + " --input_file " + values["-p_input_file-"]+"/"
+    pred_cmd = pred_cmd + " --input_file " + values["-p_input_file-"]
 
     #Boolean Parameter
     if values["-p_debug-"] is True:  # optional
