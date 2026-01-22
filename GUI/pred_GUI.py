@@ -8,23 +8,23 @@ working_directory=os.getcwd()
 
 sg.set_options(font=("Arial Bold",14))
 
-p_src_dir_label=sg.Text("Enter ANIMAL-SPOT source directory:")
+p_src_dir_label=sg.Text("ANIMAL-SPOT source directory:")
 p_src_dir_input=sg.InputText(key="-p_src_dir-")
 p_src_dir_filebrowser=sg.FolderBrowse(initial_folder=working_directory)
 
-p_model_dir_label=sg.Text("Enter model path:")
+p_model_dir_label=sg.Text("Model path:")
 p_model_dir_input=sg.InputText(key="-p_model_dir-")
 p_model_dir_filebrowser=sg.FileBrowse(initial_folder=working_directory)
 
-p_log_dir_label=sg.Text("Enter log directory:")
+p_log_dir_label=sg.Text("Log directory:")
 p_log_dir_input=sg.InputText(key="-p_log_dir-")
 p_log_dir_filebrowser=sg.FolderBrowse(initial_folder=working_directory)
 
-p_output_dir_label=sg.Text("Enter output directory:")
+p_output_dir_label=sg.Text("Output directory:")
 p_output_dir_input=sg.InputText(key="-p_output_dir-")
 p_output_dir_filebrowser=sg.FolderBrowse(initial_folder=working_directory)
 
-p_input_file_label=sg.Text("Enter Input file:")
+p_input_file_label=sg.Text("Input file:")
 p_input_file_input=sg.InputText(key="-p_input_file-")
 p_input_file_filebrowser=sg.FileBrowse(initial_folder=working_directory)
 
@@ -46,15 +46,15 @@ p_min_max_norm_checkbox=sg.Checkbox(text="", default=True, key="-p_min_max_norm-
 p_latent_extract_label=sg.Text("Use latent extraction:")
 p_latent_extract_checkbox=sg.Checkbox(text="", default=True, key="-p_latent_extract-")
 
-p_sequence_len_label=sg.Text("Enter ANIMAL-SPOT window size in ms:")
+p_sequence_len_label=sg.Text("ANIMAL-SPOT window size in ms:")
 p_sequence_len_input=sg.InputText(key="-p_sequence_len-", default_text="300")
 p_sequence_len_reset=sg.Button(button_text="default", key="p_default_sequence_len")
 
-p_hop_label=sg.Text("Enter ANIMAL-SPOT hop size:")
-p_hop_input=sg.InputText(key="-p_hop-", default_text="0.10")
+p_hop_label=sg.Text("ANIMAL-SPOT hop size in ms:")
+p_hop_input=sg.InputText(key="-p_hop-", default_text="100")
 p_hop_reset=sg.Button(button_text="default", key="p_default_hop")
 
-p_threshold_label=sg.Text("Enter ANIMAL-SPOT threshold:")
+p_threshold_label=sg.Text("ANIMAL-SPOT threshold:")
 p_threshold_input=sg.InputText(key="-p_threshold-", default_text="0.75")
 p_threshold_reset=sg.Button(button_text="default", key="p_default_threshold")
 
@@ -66,9 +66,9 @@ p_num_workers_label=sg.Text("Number of worker:")
 p_num_workers_input=sg.InputText(key="-p_num_workers-", default_text="0")
 p_num_workers_reset=sg.Button(button_text="default", key="p_default_num_workers")
 
-p_save_config_button=sg.FileSaveAs(button_text="save settings")
+p_save_config_button=sg.FileSaveAs(button_text="Save settings")
 p_save_config_Input=sg.Input(key="p_save_config", enable_events=True, visible=False)
-p_load_config_button=sg.FileBrowse(button_text="load settings")
+p_load_config_button=sg.FileBrowse(button_text="Load settings")
 p_load_config_Input=sg.Input(key="p_load_config", enable_events=True, visible=False)
 
 p_start_prediction_button=sg.Button(button_text="Start Prediction", key="p_start")
@@ -110,8 +110,8 @@ def PredhandleInput(event, values, window):
         window['-p_sequence_len-'].update("300")
         values['-p_sequence_len-'] = "300"
     if event == "p_default_hop":
-        window['-p_hop-'].update("0.10")
-        values['-p_hop-'] = "0.10"
+        window['-p_hop-'].update("100")
+        values['-p_hop-'] = "100"
     if event == "p_default_threshold":
         window['-p_threshold-'].update("0.75")
         values['-p_threshold-'] = "0.75"
@@ -198,6 +198,8 @@ def generatePredConfig(values):
         file.write("sequence_len=" + str(value) + "\n")
 
     if values["-p_hop-"] != "":
+        msvalue = float(values["-p_hop-"])
+        value = msvalue/1000.0
         file.write("hop=" + str(values["-p_hop-"]) + "\n")
 
     if values["-p_threshold-"] != "":
@@ -301,7 +303,9 @@ def loadPredConfig(values, window):
         if line.__contains__("hop="):
             val = line.split("=")[1]
             val = val.split("\n")[0]
-            window['-p_hop-'].update(val)
+            #transform s to ms
+            val = float(val)*1000
+            window['-p_hop-'].update(str(val))
             values['-p_hop-'] = val
         if line.__contains__("threshold="):
             val = line.split("=")[1]
@@ -381,7 +385,8 @@ def startPrediction(values):
         pred_cmd = pred_cmd + " --sequence_len " + str(value)
 
     if values["-p_hop-"] != "":
-        pred_cmd = pred_cmd + " --hop " + values["-p_hop-"]
+        #hop ms to s
+        pred_cmd = pred_cmd + " --hop " + str(float(values["-p_hop-"])/1000.0)
 
     if values["-p_threshold-"] != "":
         pred_cmd = pred_cmd + " --threshold " + values["-p_threshold-"]

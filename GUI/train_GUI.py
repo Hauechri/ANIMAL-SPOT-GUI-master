@@ -10,49 +10,49 @@ working_directory=os.getcwd()
 
 sg.set_options(font=("Arial Bold",14))
 
-t_src_dir_label=sg.Text("Enter ANIMAL-SPOT source directory:")
+t_src_dir_label=sg.Text("ANIMAL-SPOT source directory:")
 t_src_dir_input=sg.InputText(key="-t_src_dir-")
 t_src_dir_filebrowser=sg.FolderBrowse(initial_folder=working_directory)
 
-t_data_dir_label=sg.Text("Enter data directory:")
+t_data_dir_label=sg.Text("Data directory:")
 t_data_dir_input=sg.InputText(key="-t_data_dir-")
 t_data_dir_filebrowser=sg.FolderBrowse(initial_folder=working_directory)
 
-t_noise_dir_label=sg.Text("Enter noise directory:")
+t_noise_dir_label=sg.Text("Noise directory:")
 t_noise_dir_input=sg.InputText(key="-t_noise_dir-")
 t_noise_dir_filebrowser=sg.FolderBrowse(initial_folder=working_directory)
 
-t_cache_dir_label=sg.Text("Enter cache directory:")
+t_cache_dir_label=sg.Text("Cache directory:")
 t_cache_dir_input=sg.InputText(key="-t_cache_dir-")
 t_cache_dir_filebrowser=sg.FolderBrowse(initial_folder=working_directory)
 
-t_train_or_retrain_label=sg.Text("Enable retrain:")
-t_train_or_retrain=sg.Checkbox(text="", default=False, key="-t_tore-")
+#t_train_or_retrain_label=sg.Text("Enable retrain:")
+#t_train_or_retrain=sg.Checkbox(text="", default=False, key="-t_tore-")
 
-t_model_dir_label=sg.Text("Enter model directory:")
+t_model_dir_label=sg.Text("Path to train model directory:")
 t_model_dir_input=sg.InputText(key="-t_model_dir-")
 t_model_dir_folderbrowser=sg.FolderBrowse(initial_folder=working_directory)
 
-t_model_dir_relabel=sg.Text("Enter model file:")
-t_model_dir_reinput=sg.InputText(key="-t_model_redir-")
-t_model_dir_refilebrowser=sg.FileBrowse(initial_folder=working_directory)
+#t_model_dir_relabel=sg.Text("Path to model file for retraining:")
+#t_model_dir_reinput=sg.InputText(key="-t_model_redir-")
+#t_model_dir_refilebrowser=sg.FileBrowse(initial_folder=working_directory)
 
-t_checkpoint_dir_label=sg.Text("Enter checkpoint directory:")
+t_checkpoint_dir_label=sg.Text("Checkpoint directory:")
 t_checkpoint_dir_input=sg.InputText(key="-t_checkpoint_dir-")
 t_checkpoint_dir_filebrowser=sg.FolderBrowse(initial_folder=working_directory)
 
 t_transfer_learning_label=sg.Text("Use Transfer Learning:")
 t_transfer_learning=sg.Checkbox(text="", default=False, key="-t_transfer-")
 
-t_transfer_model_label=sg.Text("Enter transfer model file:")
+t_transfer_model_label=sg.Text("Transfer model file:")
 t_transfer_model_input=sg.InputText(key="-t_transfer_model-")
 t_transfer_model_filebrowser=sg.FileBrowse(initial_folder=working_directory)
 
-t_log_dir_label=sg.Text("Enter log directory:")
+t_log_dir_label=sg.Text("Log directory:")
 t_log_dir_input=sg.InputText(key="-t_log_dir-")
 t_log_dir_filebrowser=sg.FolderBrowse(initial_folder=working_directory)
 
-t_summary_dir_label=sg.Text("Enter summary directory:")
+t_summary_dir_label=sg.Text("Summary directory:")
 t_summary_dir_input=sg.InputText(key="-t_summary_dir-")
 t_summary_dir_filebrowser=sg.FolderBrowse(initial_folder=working_directory)
 
@@ -77,11 +77,11 @@ t_filter_broken_audio_checkbox=sg.Checkbox(text="", default=False, key="-t_filte
 t_min_max_norm_label=sg.Text("Use min max normalization:")
 t_min_max_norm_checkbox=sg.Checkbox(text="", default=True, key="-t_min_max_norm-")
 
-t_sequence_len_label=sg.Text("Enter ANIMAL-SPOT window size in ms:")
+t_sequence_len_label=sg.Text("ANIMAL-SPOT window size in ms:")
 t_sequence_len_input=sg.InputText(key="-t_sequence_len-", default_text="20")
 t_sequence_len_reset=sg.Button(button_text="default", key="t_default_sequence_len")
 
-t_max_train_epochs_label=sg.Text("Enter maximum number of epochs:")
+t_max_train_epochs_label=sg.Text("Maximum number of epochs:")
 t_max_train_epochs_input=sg.InputText(key="-t_max_train_epochs-", default_text="150")
 t_max_train_epochs_reset=sg.Button(button_text="default", key="t_default_max_train_epochs")
 
@@ -157,9 +157,9 @@ t_fmax_label=sg.Text("Frequency minimum:")
 t_fmax_input=sg.InputText(key="-t_fmax-", default_text="90000")
 t_fmax_reset=sg.Button(button_text="default", key="t_default_fmax")
 
-t_save_config_button=sg.FileSaveAs(button_text="save settings")
+t_save_config_button=sg.FileSaveAs(button_text="Save settings")
 t_save_config_Input=sg.Input(key="t_save_config", enable_events=True, visible=False)
-t_load_config_button=sg.FileBrowse(button_text="load settings")
+t_load_config_button=sg.FileBrowse(button_text="Load settings")
 t_load_config_Input=sg.Input(key="t_load_config", enable_events=True, visible=False)
 
 t_start_prediction_button=sg.Button(button_text="Start Training", key="t_start")
@@ -168,9 +168,9 @@ t_start_prediction_button=sg.Button(button_text="Start Training", key="t_start")
 #sg.Print('Re-routing train_GUI to Debug stdout', do_not_reroute_stdout=False)
 
 train_layout=[
-    [t_train_or_retrain_label, t_train_or_retrain],
+    #[t_train_or_retrain_label, t_train_or_retrain],
     [t_model_dir_label, t_model_dir_input, t_model_dir_folderbrowser],
-    [t_model_dir_relabel, t_model_dir_reinput, t_model_dir_refilebrowser],
+    #[t_model_dir_relabel, t_model_dir_reinput, t_model_dir_refilebrowser],
     [t_src_dir_label,t_src_dir_input,t_src_dir_filebrowser],
     [t_data_dir_label,t_data_dir_input,t_data_dir_filebrowser],
     [t_noise_dir_label,t_noise_dir_input,t_noise_dir_filebrowser],
@@ -294,18 +294,11 @@ def generateTrainConfig(values):
         return
     file.write("src_dir=" + str(values["-t_src_dir-"]) + "\n")
 
-    if values["-t_tore-"] is True:
-        if values["-t_model_redir-"] == "":
-            sg.popup_error("Retrain enabled but model file not specified")
-            file.close()
-            return
-        file.write("model_dir=" + str(values["-t_model_redir-"]) + "\n")
-    else:
-        if values["-t_model_dir-"] == "":
-            sg.popup_error("Retrain disabled but model save directory not specified")
-            file.close()
-            return
-        file.write("model_dir=" + str(values["-t_model_dir-"]) + "\n")
+    if values["-t_model_dir-"] == "":
+        sg.popup_error("Model save directory not specified")
+        file.close()
+        return
+    file.write("model_dir=" + str(values["-t_model_dir-"]) + "\n")
 
     if values["-t_data_dir-"] == "":
         sg.popup_error("Data directory not specified")
@@ -470,20 +463,10 @@ def loadTrainConfig(values, window):
             window['-t_cache_dir-'].update(val)
             values['-t_cache_dir-'] = val
         if line.__contains__("model_dir="):
-            if line.__contains__("/\n"):
-                window['-t_tore-'].update(False)
-                values['-t_tore-'] = False
                 val = line.split("=")[1]
                 val = val.split("\n")[0]
                 window['-t_model_dir-'].update(val)
                 values['-t_model_dir-'] = val
-            else:
-                window['-t_tore-'].update(True)
-                values['-t_tore-'] = True
-                val = line.split("=")[1]
-                val = val.split("\n")[0]
-                window['-t_model_redir-'].update(val)
-                values['-t_model_redir-'] = val
 
         if line.__contains__("checkpoint_dir="):
             val = line.split("=")[1]

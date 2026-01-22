@@ -6,24 +6,24 @@ working_directory=os.getcwd()
 
 sg.set_options(font=("Arial Bold",14))
 
-e_src_dir_label=sg.Text("Enter Prediction directory:")
+e_src_dir_label=sg.Text("Prediction directory:")
 e_src_dir_input=sg.InputText(key="-e_prediction_dir-")
 e_src_dir_filebrowser=sg.FolderBrowse(initial_folder=working_directory)
 
-e_output_dir_label=sg.Text("Enter output directory:")
+e_output_dir_label=sg.Text("Output directory:")
 e_output_dir_input=sg.InputText(key="-e_output_dir-")
 e_output_dir_filebrowser=sg.FolderBrowse(initial_folder=working_directory)
 
 e_noise_in_anno_label=sg.Text("Noise in annotation:")
 e_noise_in_anno_checkbox=sg.Checkbox(text="", default=False, key="-e_noise_in_anno-")
 
-e_threshold_label=sg.Text("Enter ANIMAL-SPOT threshold:")
+e_threshold_label=sg.Text("ANIMAL-SPOT threshold:")
 e_threshold_input=sg.InputText(key="-e_threshold-", default_text="0.85")
 e_threshold_reset=sg.Button(button_text="default", key="e_default_threshold")
 
-e_save_config_button=sg.FileSaveAs(button_text="save settings")
+e_save_config_button=sg.FileSaveAs(button_text="Save settings")
 e_save_config_Input=sg.Input(key="e_save_config", enable_events=True, visible=False)
-e_load_config_button=sg.FileBrowse(button_text="load settings")
+e_load_config_button=sg.FileBrowse(button_text="Load settings")
 e_load_config_Input=sg.Input(key="e_load_config", enable_events=True, visible=False)
 
 e_start_prediction_button=sg.Button(button_text="Start Evaluation", key="e_start")
