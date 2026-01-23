@@ -12,7 +12,17 @@ from train_GUI import getTrainGUI, TrainhandleInput
 from pred_GUI import getPredGUI, PredhandleInput
 from eval_GUI import getEvalGUI, EvalhandleInput
 
-
+is_supported = sys.version_info[:2] == (3, 10)
+if sys.version_info[:2] != (3, 10):
+    sg.popup(
+        "⚠️ Python Version Warning",
+        f"You are running Python {sys.version_info.major}.{sys.version_info.minor}\n\n"
+        "This software was built and tested for Python 3.10.\n"
+        "Other versions may not work correctly.\n\n"
+        "Please install Python 3.10 if you encounter issues.",
+        title="Version Warning",
+        keep_on_top=True
+    )
 #from retrain_GUI import getRetrainGUI, RetrainhandleInput
 working_directory=os.getcwd()
 
