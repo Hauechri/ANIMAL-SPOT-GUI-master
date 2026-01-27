@@ -12,19 +12,19 @@ p_src_dir_label=sg.Text("ANIMAL-SPOT source directory:")
 p_src_dir_input=sg.InputText(key="-p_src_dir-")
 p_src_dir_filebrowser=sg.FolderBrowse(initial_folder=working_directory)
 
-p_model_dir_label=sg.Text("Model path:")
+p_model_dir_label=sg.Text("Path model file:")
 p_model_dir_input=sg.InputText(key="-p_model_dir-")
 p_model_dir_filebrowser=sg.FileBrowse(initial_folder=working_directory)
 
-p_log_dir_label=sg.Text("Log directory:")
+p_log_dir_label=sg.Text("Path folder to store log:")
 p_log_dir_input=sg.InputText(key="-p_log_dir-")
 p_log_dir_filebrowser=sg.FolderBrowse(initial_folder=working_directory)
 
-p_output_dir_label=sg.Text("Output directory:")
+p_output_dir_label=sg.Text("Path folder to store output:")
 p_output_dir_input=sg.InputText(key="-p_output_dir-")
 p_output_dir_filebrowser=sg.FolderBrowse(initial_folder=working_directory)
 
-p_input_file_label=sg.Text("Input file:")
+p_input_file_label=sg.Text("Path folder with input files:")
 p_input_file_input=sg.InputText(key="-p_input_file-")
 p_input_file_filebrowser=sg.FileBrowse(initial_folder=working_directory)
 
@@ -46,15 +46,15 @@ p_min_max_norm_checkbox=sg.Checkbox(text="", default=True, key="-p_min_max_norm-
 p_latent_extract_label=sg.Text("Use latent extraction:")
 p_latent_extract_checkbox=sg.Checkbox(text="", default=True, key="-p_latent_extract-")
 
-p_sequence_len_label=sg.Text("ANIMAL-SPOT window size in ms:")
+p_sequence_len_label=sg.Text("Prediction window size in ms:")
 p_sequence_len_input=sg.InputText(key="-p_sequence_len-", default_text="300")
 p_sequence_len_reset=sg.Button(button_text="default", key="p_default_sequence_len")
 
-p_hop_label=sg.Text("ANIMAL-SPOT hop size in ms:")
+p_hop_label=sg.Text("Prediction hop size in ms:")
 p_hop_input=sg.InputText(key="-p_hop-", default_text="100")
 p_hop_reset=sg.Button(button_text="default", key="p_default_hop")
 
-p_threshold_label=sg.Text("ANIMAL-SPOT threshold:")
+p_threshold_label=sg.Text("Prediction threshold:")
 p_threshold_input=sg.InputText(key="-p_threshold-", default_text="0.75")
 p_threshold_reset=sg.Button(button_text="default", key="p_default_threshold")
 
@@ -71,14 +71,14 @@ p_save_config_Input=sg.Input(key="p_save_config", enable_events=True, visible=Fa
 p_load_config_button=sg.FileBrowse(button_text="Load settings")
 p_load_config_Input=sg.Input(key="p_load_config", enable_events=True, visible=False)
 
-p_start_prediction_button=sg.Button(button_text="Start Prediction", key="p_start")
+p_start_prediction_button=sg.Button(button_text="Start prediction", key="p_start")
 #p_output = sg.Output(size=(67, 10))
 
 #sg.Print('Re-routing pred_GUI to Debug stdout', do_not_reroute_stdout=False)
 
 pred_layout=[
-    [p_model_dir_label, p_model_dir_input, p_model_dir_filebrowser],
     [p_src_dir_label, p_src_dir_input, p_src_dir_filebrowser],
+    [p_model_dir_label, p_model_dir_input, p_model_dir_filebrowser],
     [p_log_dir_label, p_log_dir_input, p_log_dir_filebrowser],
     [p_output_dir_label, p_output_dir_input, p_output_dir_filebrowser],
     [p_input_file_label, p_input_file_input, p_input_file_filebrowser],
@@ -90,7 +90,7 @@ pred_layout=[
     [p_latent_extract_label, p_latent_extract_checkbox],
     [p_sequence_len_label, p_sequence_len_input, p_sequence_len_reset],
     [p_hop_label, p_hop_input, p_hop_reset],
-    [p_threshold_label, p_threshold_input, p_threshold_reset],
+    #[p_threshold_label, p_threshold_input, p_threshold_reset],
     [p_batch_size_label, p_batch_size_input, p_batch_size_reset],
     [p_num_workers_label, p_num_workers_input, p_num_workers_reset],
     [p_save_config_button, p_save_config_Input],
