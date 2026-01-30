@@ -31,6 +31,18 @@ p_input_file_filebrowser=sg.FileBrowse(initial_folder=working_directory)
 p_debug_label=sg.Text("Enable debug:")
 p_debug_checkbox=sg.Checkbox(text="", default=False, key="-p_debug-")
 
+p_sequence_len_label=sg.Text("Prediction window size in ms:")
+p_sequence_len_input=sg.InputText(key="-p_sequence_len-", default_text="300")
+p_sequence_len_reset=sg.Button(button_text="default", key="p_default_sequence_len")
+
+p_hop_label=sg.Text("Prediction hop size in ms:")
+p_hop_input=sg.InputText(key="-p_hop-", default_text="100")
+p_hop_reset=sg.Button(button_text="default", key="p_default_hop")
+
+p_threshold_label=sg.Text("Prediction threshold:")
+p_threshold_input=sg.InputText(key="-p_threshold-", default_text="0.75")
+p_threshold_reset=sg.Button(button_text="default", key="p_default_threshold")
+
 p_no_cuda_label=sg.Text("Use cuda:")
 p_no_cuda_checkbox=sg.Checkbox(text="", default=True, key="-p_no_cuda-")
 
@@ -45,18 +57,6 @@ p_min_max_norm_checkbox=sg.Checkbox(text="", default=True, key="-p_min_max_norm-
 
 p_latent_extract_label=sg.Text("Use latent extraction:")
 p_latent_extract_checkbox=sg.Checkbox(text="", default=True, key="-p_latent_extract-")
-
-p_sequence_len_label=sg.Text("Prediction window size in ms:")
-p_sequence_len_input=sg.InputText(key="-p_sequence_len-", default_text="300")
-p_sequence_len_reset=sg.Button(button_text="default", key="p_default_sequence_len")
-
-p_hop_label=sg.Text("Prediction hop size in ms:")
-p_hop_input=sg.InputText(key="-p_hop-", default_text="100")
-p_hop_reset=sg.Button(button_text="default", key="p_default_hop")
-
-p_threshold_label=sg.Text("Prediction threshold:")
-p_threshold_input=sg.InputText(key="-p_threshold-", default_text="0.75")
-p_threshold_reset=sg.Button(button_text="default", key="p_default_threshold")
 
 p_batch_size_label=sg.Text("Batch size:")
 p_batch_size_input=sg.InputText(key="-p_batch_size-", default_text="1")
@@ -83,14 +83,14 @@ pred_layout=[
     [p_output_dir_label, p_output_dir_input, p_output_dir_filebrowser],
     [p_input_file_label, p_input_file_input, p_input_file_filebrowser],
     [p_debug_label, p_debug_checkbox],
+    [p_sequence_len_label, p_sequence_len_input, p_sequence_len_reset],
+    [p_hop_label, p_hop_input, p_hop_reset],
+    #[p_threshold_label, p_threshold_input, p_threshold_reset],
     [p_no_cuda_label, p_no_cuda_checkbox],
     [p_visualize_label, p_visualize_checkbox],
     [p_jit_load_label, p_jit_load_checkbox],
     [p_min_max_norm_label, p_min_max_norm_checkbox],
     [p_latent_extract_label, p_latent_extract_checkbox],
-    [p_sequence_len_label, p_sequence_len_input, p_sequence_len_reset],
-    [p_hop_label, p_hop_input, p_hop_reset],
-    #[p_threshold_label, p_threshold_input, p_threshold_reset],
     [p_batch_size_label, p_batch_size_input, p_batch_size_reset],
     [p_num_workers_label, p_num_workers_input, p_num_workers_reset],
     [p_save_config_button, p_save_config_Input],
