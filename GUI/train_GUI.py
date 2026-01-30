@@ -14,7 +14,7 @@ t_src_dir_label=sg.Text("ANIMAL-SPOT source directory:")
 t_src_dir_input=sg.InputText(key="-t_src_dir-")
 t_src_dir_filebrowser=sg.FolderBrowse(initial_folder=working_directory)
 
-t_data_dir_label=sg.Text("Path folder target examples:")
+t_data_dir_label=sg.Text("Path folder training examples:")
 t_data_dir_input=sg.InputText(key="-t_data_dir-")
 t_data_dir_filebrowser=sg.FolderBrowse(initial_folder=working_directory)
 
@@ -49,10 +49,10 @@ t_summary_dir_label=sg.Text("Path folder to store summary:")
 t_summary_dir_input=sg.InputText(key="-t_summary_dir-")
 t_summary_dir_filebrowser=sg.FolderBrowse(initial_folder=working_directory)
 
-t_transfer_learning_label=sg.Text("Use Transfer Learning:")
+t_transfer_learning_label=sg.Text("Use retraining or transfer learning:")
 t_transfer_learning=sg.Checkbox(text="", default=False, key="-t_transfer-")
 
-t_transfer_model_label=sg.Text("Path model for transfer learning:")
+t_transfer_model_label=sg.Text("Path model for retraining or transfer learning:")
 t_transfer_model_input=sg.InputText(key="-t_transfer_model-")
 t_transfer_model_filebrowser=sg.FileBrowse(initial_folder=working_directory)
 
@@ -153,7 +153,7 @@ t_fmin_label=sg.Text("Frequency minimum:")
 t_fmin_input=sg.InputText(key="-t_fmin-", default_text="18000")
 t_fmin_reset=sg.Button(button_text="default", key="t_default_fmin")
 
-t_fmax_label=sg.Text("Frequency minimum:")
+t_fmax_label=sg.Text("Frequency maximum:")
 t_fmax_input=sg.InputText(key="-t_fmax-", default_text="90000")
 t_fmax_reset=sg.Button(button_text="default", key="t_default_fmax")
 
@@ -174,39 +174,39 @@ train_layout=[
     [t_data_dir_label,t_data_dir_input,t_data_dir_filebrowser],
     [t_noise_dir_label,t_noise_dir_input,t_noise_dir_filebrowser],
     [t_model_dir_label, t_model_dir_input, t_model_dir_folderbrowser],
-    [t_cache_dir_label,t_cache_dir_input,t_cache_dir_filebrowser],
     [t_checkpoint_dir_label,t_checkpoint_dir_input,t_checkpoint_dir_filebrowser],
     [t_log_dir_label,t_log_dir_input,t_log_dir_filebrowser],
     [t_summary_dir_label,t_summary_dir_input,t_summary_dir_filebrowser],
+    [t_cache_dir_label,t_cache_dir_input,t_cache_dir_filebrowser],
     [t_transfer_learning_label, t_transfer_learning],
     [t_transfer_model_label,t_transfer_model_input,t_transfer_model_filebrowser],
     [t_debug_label,t_debug_checkbox],
     [t_start_from_scratch_label,t_start_from_scratch_checkbox],
     [t_augmentation_label,t_augmentation_checkbox],
-    [t_min_max_norm_label,t_min_max_norm_checkbox],
-    [t_jit_save_label,t_jit_save_checkbox],
-    [t_no_cuda_label,t_no_cuda_checkbox],
     [t_filter_broken_audio_label,t_filter_broken_audio_checkbox],
     [t_sequence_len_label,t_sequence_len_input,t_sequence_len_reset],
     [t_max_train_epochs_label,t_max_train_epochs_input,t_max_train_epochs_reset],
+    [t_early_stopping_patience_epochs_label,t_early_stopping_patience_epochs_input,t_early_stopping_patience_epochs_reset],
+    [t_n_freq_bins_label,t_n_freq_bins_input,t_n_freq_bins_reset],
+    [t_n_fft_label,t_n_fft_input,t_n_fft_reset],
+    [t_fmin_label,t_fmin_input,t_fmin_reset],
+    [t_fmax_label,t_fmax_input,t_fmax_reset],
+    [t_num_classes_label,t_num_classes_input,t_num_classes_reset],
     [t_epochs_per_eval_label,t_epochs_per_eval_input,t_epochs_per_eval_reset],
+    [t_min_max_norm_label,t_min_max_norm_checkbox],
+    [t_jit_save_label,t_jit_save_checkbox],
+    [t_no_cuda_label,t_no_cuda_checkbox],
     [t_batch_size_label,t_batch_size_input,t_batch_size_reset],
     [t_num_workers_label,t_num_workers_input,t_num_workers_reset],
     [t_lr_label,t_lr_input,t_lr_reset],
     [t_beta1_label,t_beta1_input,t_beta1_reset],
     [t_lr_patience_epochs_label,t_lr_patience_epochs_input,t_lr_patience_epochs_reset],
     [t_lr_decay_factor_label,t_lr_decay_factor_input,t_lr_decay_factor_reset],
-    [t_early_stopping_patience_epochs_label,t_early_stopping_patience_epochs_input,t_early_stopping_patience_epochs_reset],
     [t_freq_compression_label,t_freq_compression_input,t_freq_compression_reset],
-    [t_n_freq_bins_label,t_n_freq_bins_input,t_n_freq_bins_reset],
-    [t_n_fft_label,t_n_fft_input,t_n_fft_reset],
     [t_hop_length_label,t_hop_length_input,t_hop_length_reset],
     [t_resnet_label,t_resnet_input,t_resnet_reset],
     [t_conv_kernel_size_label,t_conv_kernel_size_input,t_conv_kernel_size_reset],
-    [t_num_classes_label,t_num_classes_input,t_num_classes_reset],
     [t_max_pool_label,t_max_pool_input,t_max_pool_reset],
-    [t_fmin_label,t_fmin_input,t_fmin_reset],
-    [t_fmax_label,t_fmax_input,t_fmax_reset],
     [t_save_config_button, t_save_config_Input],
     [t_load_config_button, t_load_config_Input],
     [t_start_prediction_button],
