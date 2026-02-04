@@ -8,6 +8,8 @@ working_directory=os.getcwd()
 
 sg.set_options(font=("Arial Bold",14))
 
+DEFAULT_THRESHOLD = "0.75"
+
 p_src_dir_label=sg.Text("ANIMAL-SPOT source directory:")
 p_src_dir_input=sg.InputText(key="-p_src_dir-")
 p_src_dir_filebrowser=sg.FolderBrowse(initial_folder=working_directory)
@@ -39,9 +41,9 @@ p_hop_label=sg.Text("Prediction hop size in ms:")
 p_hop_input=sg.InputText(key="-p_hop-", default_text="100")
 p_hop_reset=sg.Button(button_text="default", key="p_default_hop")
 
-p_threshold_label=sg.Text("Prediction threshold:")
-p_threshold_input=sg.InputText(key="-p_threshold-", default_text="0.75")
-p_threshold_reset=sg.Button(button_text="default", key="p_default_threshold")
+# p_threshold_label=sg.Text("Prediction threshold:")
+# p_threshold_input=sg.InputText(key="-p_threshold-", default_text="0.75")
+# p_threshold_reset=sg.Button(button_text="default", key="p_default_threshold")
 
 p_no_cuda_label=sg.Text("Use cuda:")
 p_no_cuda_checkbox=sg.Checkbox(text="", default=True, key="-p_no_cuda-")
@@ -85,7 +87,7 @@ pred_layout=[
     [p_debug_label, p_debug_checkbox],
     [p_sequence_len_label, p_sequence_len_input, p_sequence_len_reset],
     [p_hop_label, p_hop_input, p_hop_reset],
-    #[p_threshold_label, p_threshold_input, p_threshold_reset],
+    # [p_threshold_label, p_threshold_input, p_threshold_reset],
     [p_no_cuda_label, p_no_cuda_checkbox],
     [p_visualize_label, p_visualize_checkbox],
     [p_jit_load_label, p_jit_load_checkbox],
@@ -112,9 +114,9 @@ def PredhandleInput(event, values, window):
     if event == "p_default_hop":
         window['-p_hop-'].update("100")
         values['-p_hop-'] = "100"
-    if event == "p_default_threshold":
-        window['-p_threshold-'].update("0.75")
-        values['-p_threshold-'] = "0.75"
+    # if event == "p_default_threshold":
+    #     window['-p_threshold-'].update("0.75")
+    #     values['-p_threshold-'] = "0.75"
     if event == "p_default_batch_size":
         window['-p_batch_size-'].update("1")
         values['-p_batch_size-'] = "1"
@@ -202,8 +204,9 @@ def generatePredConfig(values):
         value = msvalue/1000.0
         file.write("hop=" + str(values["-p_hop-"]) + "\n")
 
-    if values["-p_threshold-"] != "":
-        file.write("threshold=" + str(values["-p_threshold-"]) + "\n")
+    file.write("threshold=" + DEFAULT_THRESHOLD + "\n")
+    # if values["-p_threshold-"] != "":
+    #     file.write("threshold=" + str(values["-p_threshold-"]) + "\n")
 
     if values["-p_batch_size-"] != "":
         file.write("batch_size=" + str(values["-p_batch_size-"]) + "\n")
@@ -307,11 +310,11 @@ def loadPredConfig(values, window):
             val = float(val)*1000
             window['-p_hop-'].update(str(val))
             values['-p_hop-'] = val
-        if line.__contains__("threshold="):
-            val = line.split("=")[1]
-            val = val.split("\n")[0]
-            window['-p_threshold-'].update(val)
-            values['-p_threshold-'] = val
+        # if line.__contains__("threshold="):
+        #     val = line.split("=")[1]
+        #     val = val.split("\n")[0]
+        #     window['-p_threshold-'].update(val)
+        #     values['-p_threshold-'] = val
         if line.__contains__("batch_size="):
             val = line.split("=")[1]
             val = val.split("\n")[0]
@@ -388,8 +391,9 @@ def startPrediction(values):
         #hop ms to s
         pred_cmd = pred_cmd + " --hop " + str(float(values["-p_hop-"])/1000.0)
 
-    if values["-p_threshold-"] != "":
-        pred_cmd = pred_cmd + " --threshold " + values["-p_threshold-"]
+    pred_cmd = pred_cmd + " --threshold " + values.get("-p_threshold-", DEFAULT_THRESHOLD)
+    # if values["-p_threshold-"] != "":
+    #     pred_cmd = pred_cmd + " --threshold " + values["-p_threshold-"]
 
     if values["-p_batch_size-"] != "":
         pred_cmd = pred_cmd + " --batch_size " + values["-p_batch_size-"]
