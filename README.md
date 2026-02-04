@@ -4,26 +4,32 @@ for Simeon and Christian.
 This Development Repository only contains the source code.
 The Vendor which is required for this Project can be found here.
 
-https://drive.google.com/file/d/1MpZqZImULuvYgjgwKjA-rJDLmR4VBlgq/view?usp=sharing
+<https://drive.google.com/file/d/1MpZqZImULuvYgjgwKjA-rJDLmR4VBlgq/view?usp=sharing>
 
 # Content
 
 - [Requirements](#requirement)
-- [Installation guide](#installation-guide)
+- [Installation](#installation)
+- [Training](#training)
+- [Retraining](#retraining)
+- [Transfer learning](#transfer-learning)
+- [Prediction](#prediction)
+- [Translation](#translation)
 
 # Requirements
 
 Python >=3.8 & <=3.12
 
-# Installation guide
+# Installation
 
 ## Windows
 
-0. Make sure you have the correct version of python (between >=3.8 & <=3.12). 
-To test which version you have, simply open a Windows PowerShell and type 
-`python`. To download another version, go to this link: 
-<https://www.python.org/downloads/> and make sure it is set as the default. 
-Also, make sure to tick `Add python to PATH` during installation.
+0. Make sure you have the correct version of Python (version 3.10.11 was used
+to develop the GUI, but later versions might also work). To test which version 
+you have, simply open a Windows PowerShell and type  `python -- version`. To 
+download another version, go to this link: <https://www.python.org/downloads/> 
+and make sure it is set as the default. Also, make sure to tick 
+`Add python to PATH` during installation.
 
 1. Download this repository and unzip.
 
@@ -41,9 +47,105 @@ issue on GitHub.
 
 ## Mac
 
+Installation on Mac is still in the developmental phase and remains untested, 
+please contact <simeonqs@hotmail.com> with any questions. 
+
+0. Make sure you have the correct version of Python (version 3.10.11 was used
+to develop the GUI, but later versions might also work). To test which version 
+you have, simply open a Terminal window and type `python -- version`. To 
+change your Python version you first need Homebrew:
+
+```
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+Then install the correct version of Python:
+
+```
+brew install pyenv
+pyenv install 3.10.11
+pyenv global 3.10.11
+```
+
+1. Download this repository and unzip.
+
+2. Make a virtual environment and install all requirements. Copy the full path
+to the repository and update the first line, then run:
+
+```
+cd /path/to/ANIMAL-SPOT-GUI-master-main
+python -m venv venv
+source venv/bin/activate
+pip install --upgrade pip setuptools wheel
+pip install torch==1.12.1 torchvision==0.13.1 torchaudio==0.12.1
+pip install -r requirements.txt
+```
+
+3. Start the GUI. Copy the full path to the repository and update the first 
+line, then run:
+
+```
+cd /path/to/ANIMAL-SPOT-GUI-master-main
+python -m venv venv
+python GUI/start_GUI_tabs.py
+```
+
+4. The GUI should now open. If not, contact <simeonqs@hotmail.com> or open an 
+issue on GitHub.
+
 ## Linux
 
-# Training guide
+0. Make sure you have the correct version of Python (version 3.10.11 was used
+to develop the GUI, but later versions might also work). To test which version 
+you have, simply open a Terminal window and type `python -- version`. To 
+change your Python version on Ubuntu/Debian:
+
+```
+sudo apt update
+sudo apt install software-properties-common -y
+sudo add-apt-repository ppa:deadsnakes/ppa
+sudo apt update
+
+sudo apt install python3.10 python3.10-venv python3.10-dev -y
+
+python3.10 --version
+```
+
+To make it your default run:
+
+```
+sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1
+sudo update-alternatives --config python3
+```
+
+1. Download this repository and unzip.
+
+2. Make a virtual environment and install all requirements. Copy the full path
+to the repository and update the first line, then run:
+
+```
+cd /path/to/ANIMAL-SPOT-GUI-master-main
+python -m venv venv
+source venv/bin/activate
+pip install --upgrade pip setuptools wheel
+pip install torch==1.12.1+cu113 torchvision==0.13.1+cu113 \
+    torchaudio==0.12.1 --extra-index-url https://download.pytorch.org/whl/cu113
+pip install -r requirements.txt
+```
+
+3. Start the GUI. Copy the full path to the repository and update the first 
+line, then run:
+
+```
+cd /path/to/ANIMAL-SPOT-GUI-master-main
+python -m venv venv
+python GUI/start_GUI_tabs.py
+```
+
+4. The GUI should now open. If not, contact <simeonqs@hotmail.com> or open an 
+issue on GitHub.
+
+# Training
 
 ## Data preparation
 
